@@ -706,25 +706,9 @@ class CanvasTools {
 		this.state.drawType = 'brush'
 		this.state.isEntry = false
 
-		this.rect.width = canvas.width
-		this.rect.height = canvas.height
+        this.render()
 
-		this.rect.offsetWidth = canvas.offsetWidth
-		this.rect.offsetHeight = canvas.offsetHeight
-
-		const rect = canvas.getBoundingClientRect()
-		this.rect.top = rect.top
-		this.rect.left = rect.left
-
-		//保存现场
-		this.state.lastImageData = this.context.getImageData(0, 0, this.rect.width, this.rect.height)
-
-		//将画布的初始状态保存到历史记录
-		__pushHistory.call(this)
-
-		__toggleCanvasCursor.call(this)
-
-		this.render()
+		this.refresh()
 	}
 
 	/**
@@ -746,15 +730,34 @@ class CanvasTools {
 		__bindEvents.call(this)
 	}
 
+    // 重设画布. Edited by Datou on 17/07/12.
 	refresh() {
+        this.history.length = 0;
 
+        this.rect.width = this.canvas.width
+        this.rect.height = this.canvas.height
+
+        this.rect.offsetWidth = this.canvas.offsetWidth
+        this.rect.offsetHeight = this.canvas.offsetHeight
+
+        const rect = this.canvas.getBoundingClientRect()
+        this.rect.top = rect.top
+        this.rect.left = rect.left
+
+        //保存现场
+        this.state.lastImageData = this.context.getImageData(0, 0, this.rect.width, this.rect.height)
+
+        //将画布的初始状态保存到历史记录
+        __pushHistory.call(this)
+
+        __toggleCanvasCursor.call(this)
 	}
 
 	/**
-	 * destory
+	 * destroy
 	 * @return 
 	 */
-	destory() {
+	destroy() {
 		const {
 			canvas,
 			$el,
@@ -777,7 +780,7 @@ class CanvasTools {
 		utils.$off(canvas, 'click', _handles.insertTextHelper)
 		utils.$off(document, 'click', _handles.removeTextHelper)
 		window.removeEventListener('resize', _handles.resize)
-		$textHelper && $textHelper.parentNoed.removeChild($textHelper)
+		$textHelper && $textHelper.parentNode.removeChild($textHelper)
 		this.canvas = null
 		this.context = null
 		this.history.length = 0

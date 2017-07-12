@@ -40,7 +40,7 @@ if (env === 'build') {
 
 module.exports = {
 	entry: './src/js/main',
-	devtool: env !== 'build' ? 'source-map' : false,
+	devtool: env === 'build' ? 'source-map' : false,
 	output: {
 		path: __dirname + '/dist',
 		filename: outputFile,

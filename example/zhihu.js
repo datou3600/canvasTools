@@ -46,6 +46,6 @@
 		$canvasWrap.style.maxHeight = 0 + 'px'
 		$canvasWrap.removeChild($canvas)
 		$canvas = null
-		canvasTools.destory()
+		canvasTools.destroy()
 	})
 })()
