@@ -180,6 +180,10 @@ const removeTextHelper = () => {
 const getPos = (event, rect) => {
 	let x = event.pageX - rect.left
 	let y = event.pageY - rect.top
+    if(rect.scrolling && rect.scrolling !== document.body){
+        x += rect.scrolling.scrollLeft;
+        y += rect.scrolling.scrollTop;
+    }
 	if (x <= 0) x = 0
 	if (x >= rect.width) x = rect.width
 	if (y <= 0) y = 0
@@ -200,7 +204,9 @@ const defaults = {
 	//工具条父级对象容器
 	container: document.body,
 	//显示按钮
-	buttons: ['rect', 'ellipse', 'brush', 'font', 'mosaic', 'undo', 'save']
+	buttons: ['rect', 'ellipse', 'brush', 'font', 'mosaic', 'undo', 'save'],
+    // canvas 的滚动容器. Edited by Datou on 17/07/13.
+    scrollContainer: null
 }
 
 //创建一个下载链接
@@ -569,6 +575,10 @@ function __drawFont(event) {
 		lineWidth = 0,
 		lastSubStrIndex = 0
 
+    if(this.config.scrollContainer && this.config.scrollContainer !== document.body) {
+        x += this.config.scrollContainer.scrollLeft;
+        y += this.config.scrollContainer.scrollTop;
+    }
 	context.beginPath()
 	context.save()
 	context.fillStyle = this.state.strokeColor
@@ -698,6 +708,8 @@ class CanvasTools {
 		this.state = Object.create(null)
 		this.rect = Object.create(null)
 		this._handles = Object.create(null)
+
+        this.rect.scrolling = this.config.scrollContainer;
 
 		this.state.strokeWidth = STROKE_DEFAULT_WIDTH
 		this.state.fontSize = TEXT_HELPER_FONT_SIZE
